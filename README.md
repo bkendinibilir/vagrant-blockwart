@@ -1,20 +1,12 @@
-# Vagrant::Blockwart
+# Vagrant Blockwart Provisioner
 
-TODO: Write a gem description
+This is a [Vagrant](http://www.vagrantup.com) plugin that adds an [Blockwart](http://blockwart.org) provisioner to Vagrant, supporting to provision your virtual machines with local Blockwart repository.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Just type it on your vagrant environment:
 
-    gem 'vagrant-blockwart'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install vagrant-blockwart
+	vagrant plugin install vagrant-blockwart
 
 ## Usage
 
@@ -22,7 +14,7 @@ TODO: Write usage instructions here
 
 ## Contributing
 
-1. Fork it ( http://github.com/<my-github-username>/vagrant-blockwart/fork )
+1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
