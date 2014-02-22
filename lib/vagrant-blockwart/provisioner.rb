@@ -19,3 +19,6 @@ module Vagrant
 			def cleanup
 				@logger.debug("cleanup")
 			end
+		end
+	end
+end
