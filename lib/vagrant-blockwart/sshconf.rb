@@ -59,3 +59,7 @@ module Vagrant
 				end
 				FileUtils.touch(ENV['HOME'] + "/.ssh/config")
 			end
+			
+		end
+	end
+end
