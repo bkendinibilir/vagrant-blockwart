@@ -5,7 +5,12 @@ module VagrantPlugins
 		class Plugin < Vagrant.plugin("2")
   			name "vagrant-blockwart"
 
-  			provisioner "blockwart" do
+			config(:blockwart, :provisioner) do
+				require_relative "config"
+				Config
+			end
+
+  			provisioner(:blockwart) do
   				require_relative "provisioner"
     			Provisioner
   			end
