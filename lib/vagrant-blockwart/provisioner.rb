@@ -1,7 +1,6 @@
 require "fileutils"
-require "erb"
-require "ostruct"
-require "ssh-config"
+require "bwmanage"
+require "sshconf"
 
 module VagrantPlugins
 	module Blockwart
@@ -23,95 +22,18 @@ module VagrantPlugins
 
 			def provision
 				@logger.warn("provision()")
-				update_sshconfig()
-				update_nodes()
+				ssh = SshConf.new
+				ssh.update(@machine.ssh_info)
+				bw = BwManage.new
+				bw.update_nodes({config.node_name => config.node_uuid})
 			end
 
 			def cleanup
 				@logger.warn("cleanup()")
-				reset_sshconfig()
-				reset_nodes()
-			end
-
-
-			def render_template(template_path, data)
-				opts = OpenStruct.new(data)
-				erb = ERB.new(File.read(template_path))
-				return erb.result(opts.instance_eval {binding})
-			end
-				
-			def update_nodes()
-				nodes = {
-  					config.node_name => config.node_uuid,
-				}
-				File.open("templates/nodes.py", "w+") do |f|
-					f.write(render_template("nodes.py", nodes))
-				end
-			end
-
-			def reset_nodes()
-				File.open("templates/nodes.py", "w+") do |f|
-					f.write(render_template("nodes.py", {}))
-				end
-			end
-
-			def get_nodes()
-				nodes = `bw nodes`
-				return nodes.split('\n')
-			end
-
-			def touch_sshconfig()
-				unless File.directory?(ENV['HOME'] + "/.ssh")
-  					FileUtils.mkdir_p(ENV['HOME'] + "/.ssh")
-				end
-				FileUtils.touch(ENV['HOME'] + "/.ssh/config")
-			end
-
-			def update_sshconfig()
-				ssh_info = @machine.ssh_info
-
-				touch_sshconfig()
-				ssh_config = ConfigFile.new
-				ssh_config.set(config.node_uuid, 'HostName', ssh_info[:host])
-				ssh_config.set(config.node_uuid, 'Port', ssh_info[:port])
-				ssh_config.set(config.node_uuid, 'User', ssh_info[:username])
-				
-				ssh_keys = ssh_info[:private_key_path]
-				ssh_keys.each do |ssh_key|
-					ssh_config.set(config.node_uuid, 'IdentityFile', ssh_key)
-				end
-
-				if ssh_info[:forward_agent]
-					ssh_config.set(config.node_uuid, 'ForwardAgent', 'yes')
-				end
-
-				if ssh_info[:forward_x11]
-					ssh_config.set(config.node_uuid, 'ForwardX11', 'yes')
-				end
-
-				if ssh_info[:proxy_command]
-					ssh_config.set(config.node_uuid, 'ProxyCommand', ssh_info[:proxy_command])
-				end
-
-				ssh_config.set(config.node_uuid, 'UserKnownHostsFile', '/dev/null')
-				ssh_config.set(config.node_uuid, 'StrictHostKeyChecking', 'no')
-				ssh_config.set(config.node_uuid, 'PasswordAuthentication', 'no')
-				ssh_config.set(config.node_uuid, 'IdentitiesOnly', 'yes')
-				ssh_config.set(config.node_uuid, 'LogLevel', 'FATAL')
-				
-				ssh_config.save()
-			end
-
-			def reset_sshconfig()
-				nodes = get_nodes()
-				if nodes
-					touch_sshconfig()
-					ssh_config = ConfigFile.new
-					nodes.each do |node_uuid|
-						ssh_config.rm(node_uuid)
-					end
-					ssh_config.save()
-				end
+				ssh = SshConf.new
+				bw = BwManage.new
+				ssh.remove_hosts(bw.node_hosts)
+				bw.update_nodes({})
 			end
 
 		end
