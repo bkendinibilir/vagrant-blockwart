@@ -1,0 +1,7 @@
+nodes = {
+<% nodes.each do |name, uuid| -%>
+    '<%= name %>': {
+        'hostname': "<%= uuid %>",
+    },
+<% end -%>
+}

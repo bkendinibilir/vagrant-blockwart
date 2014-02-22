@@ -1,4 +1,6 @@
 require "fileutils"
+require "erb"
+require "ostruct"
 require "ssh-config"
 
 module VagrantPlugins
@@ -22,13 +24,36 @@ module VagrantPlugins
 			def provision
 				@logger.warn("provision()")
 				update_sshconfig()
+				update_nodes()
 			end
 
 			def cleanup
 				@logger.warn("cleanup()")
 				reset_sshconfig()
+				reset_nodes()
 			end
 
+
+			def render_template(template_path, data)
+				opts = OpenStruct.new(data)
+				erb = ERB.new(File.read(template_path))
+				return erb.result(opts.instance_eval {binding})
+			end
+				
+			def update_nodes()
+				nodes = {
+  					config.node_name => config.node_uuid,
+				}
+				File.open("templates/nodes.py", "w+") do |f|
+					f.write(render_template("nodes.py", nodes))
+				end
+			end
+
+			def reset_nodes()
+				File.open("templates/nodes.py", "w+") do |f|
+					f.write(render_template("nodes.py", {}))
+				end
+			end
 
 			def get_nodes()
 				nodes = `bw nodes`
