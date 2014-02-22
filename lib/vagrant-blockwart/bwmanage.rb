@@ -1,4 +1,4 @@
-module Vagrant
+module VagrantPlugins
 	module Blockwart
 		class BwManage
 
@@ -27,6 +27,10 @@ module Vagrant
 				File.open("nodes.py", "w+") do |f|
 					f.write(content)
 				end
+			end
+
+			def clean_nodes()
+				update_nodes({})
 			end
 
 		end
