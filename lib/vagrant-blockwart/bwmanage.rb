@@ -33,6 +33,11 @@ module VagrantPlugins
 				update_nodes({})
 			end
 
+			def apply(node)
+				node = node.gsub(/[^a-zA-Z0-9\-\_\.]/,'')
+				return system("bw apply #{node}")
+			end
+
 		end
 	end
 end

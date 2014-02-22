@@ -19,10 +19,11 @@ module VagrantPlugins
 			end
 
 			def provision
-				bw = BwManage.new
-				bw.update_nodes({config.node_name => config.node_uuid})
 				ssh = SshConf.new
 				ssh.update(config.node_uuid, @machine.ssh_info)
+				bw = BwManage.new
+				bw.update_nodes({config.node_name => config.node_uuid})
+				bw.apply(config.node_name)
 			end
 
 			def cleanup
