@@ -1,6 +1,6 @@
 require "fileutils"
-require "bwmanage"
-require "sshconf"
+require_relative "bwmanage"
+require_relative "sshconf"
 
 module VagrantPlugins
 	module Blockwart
