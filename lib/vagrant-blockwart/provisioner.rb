@@ -21,13 +21,13 @@ module VagrantPlugins
 			def provision
 				ssh = SshConf.new
 				ssh.update(config.node_uuid, @machine.ssh_info)
-				bw = BwManage.new
+				bw = BwManage.new(config.repo_path)
 				bw.update_nodes({config.node_name => config.node_uuid})
 				bw.apply(config.node_name)
 			end
 
 			def cleanup
-				bw = BwManage.new
+				bw = BwManage.new(config.repo_path)
 				ssh = SshConf.new
 				ssh.remove_hosts(bw.node_hosts)
 				bw.clean_nodes()
