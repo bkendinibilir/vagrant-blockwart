@@ -1,9 +1,9 @@
-module Vagrant
+module VagrantPlugins
 	module Blockwart
 		class Provisioner < Vagrant.plugin("2", :provisioner)
 
 			def initialize(machine, config)
-				super
+				super(machine, config)
 				@logger = Log4r::Logger.new("vagrant::provisioners::blockwart")
 				@logger.debug("initialize")
 			end
