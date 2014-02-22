@@ -9,7 +9,10 @@ module VagrantPlugins
 				super(machine, config)
 				@logger = Log4r::Logger.new("vagrant::provisioners::blockwart")
 				@logger.warn("initialize()")
-				config.machine_uuid = machine.id
+				unless config.node_uuid
+					config.node_uuid = machine.id
+				end
+				@logger.warn(config.node_uuid)
 			end
 
 			def configure(root_config)
@@ -27,6 +30,11 @@ module VagrantPlugins
 			end
 
 
+			def get_nodes()
+				nodes = `bw nodes`
+				return nodes.split('\n')
+			end
+
 			def touch_sshconfig()
 				unless File.directory?(ENV['HOME'] + "/.ssh")
   					FileUtils.mkdir_p(ENV['HOME'] + "/.ssh")
@@ -38,44 +46,49 @@ module VagrantPlugins
 				ssh_info = @machine.ssh_info
 
 				touch_sshconfig()
-				config = ConfigFile.new
-				config.set(config.machine_uuid, 'HostName', ssh_info[:host])
-				config.set(config.machine_uuid, 'Port', ssh_info[:port])
-				config.set(config.machine_uuid, 'User', ssh_info[:username])
+				ssh_config = ConfigFile.new
+				ssh_config.set(config.node_uuid, 'HostName', ssh_info[:host])
+				ssh_config.set(config.node_uuid, 'Port', ssh_info[:port])
+				ssh_config.set(config.node_uuid, 'User', ssh_info[:username])
 				
 				ssh_keys = ssh_info[:private_key_path]
 				ssh_keys.each do |ssh_key|
-					config.set(config.machine_uuid, 'IdentityFile', ssh_key)
+					ssh_config.set(config.node_uuid, 'IdentityFile', ssh_key)
 				end
 
 				if ssh_info[:forward_agent]
-					config.set(config.machine_uuid, 'ForwardAgent', 'yes')
+					ssh_config.set(config.node_uuid, 'ForwardAgent', 'yes')
 				end
 
 				if ssh_info[:forward_x11]
-					config.set(config.machine_uuid, 'ForwardX11', 'yes')
+					ssh_config.set(config.node_uuid, 'ForwardX11', 'yes')
 				end
 
 				if ssh_info[:proxy_command]
-					config.set(config.machine_uuid, 'ProxyCommand', ssh_info[:proxy_command])
+					ssh_config.set(config.node_uuid, 'ProxyCommand', ssh_info[:proxy_command])
 				end
 
-				config.set(config.machine_uuid, 'UserKnownHostsFile', '/dev/null')
-				config.set(config.machine_uuid, 'StrictHostKeyChecking', 'no')
-				config.set(config.machine_uuid, 'PasswordAuthentication', 'no')
-				config.set(config.machine_uuid, 'IdentitiesOnly', 'yes')
-				config.set(config.machine_uuid, 'LogLevel', 'FATAL')
+				ssh_config.set(config.node_uuid, 'UserKnownHostsFile', '/dev/null')
+				ssh_config.set(config.node_uuid, 'StrictHostKeyChecking', 'no')
+				ssh_config.set(config.node_uuid, 'PasswordAuthentication', 'no')
+				ssh_config.set(config.node_uuid, 'IdentitiesOnly', 'yes')
+				ssh_config.set(config.node_uuid, 'LogLevel', 'FATAL')
 				
-				config.save()
+				ssh_config.save()
 			end
 
 			def reset_sshconfig()
-				touch_sshconfig()
-				config = ConfigFile.new
-				config.rm(config.machine_uuid)
-				config.machine_uuid = nil
-				config.save()
+				nodes = get_nodes()
+				if nodes
+					touch_sshconfig()
+					ssh_config = ConfigFile.new
+					nodes.each do |node_uuid|
+						ssh_config.rm(node_uuid)
+					end
+					ssh_config.save()
+				end
 			end
+
 		end
 	end
 end
