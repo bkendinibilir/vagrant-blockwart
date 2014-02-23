@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = "bkendinibilir@seibert-media.net"
   spec.summary       = "Vagrant Blockwart provisioner."
   spec.description   = "Enables Vagrant to provision machines with Blockwart."
-  spec.homepage      = "http://blockwart.org"
+  spec.homepage      = "https://github.com/bkendinibilir/vagrant-blockwart"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
