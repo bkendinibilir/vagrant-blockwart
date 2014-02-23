@@ -9,10 +9,6 @@ module VagrantPlugins
 			def initialize(machine, config)
 				super(machine, config)
 				@logger = Log4r::Logger.new("vagrant::provisioners::blockwart")
-
-				unless config.node_uuid
-					config.node_uuid = machine.id
-				end
 			end
 
 			def configure(root_config)
@@ -20,9 +16,8 @@ module VagrantPlugins
 
 			def provision
 				ssh = SshConf.new
-				ssh.update(config.node_uuid, @machine.ssh_info)
+				ssh.update(config.node_host, @machine.ssh_info)
 				bw = BwManage.new(config.repo_path)
-				bw.update_nodes({config.node_name => config.node_uuid})
 				bw.apply(config.node_name)
 			end
 
@@ -30,7 +25,6 @@ module VagrantPlugins
 				bw = BwManage.new(config.repo_path)
 				ssh = SshConf.new
 				ssh.remove_hosts(bw.node_hosts)
-				bw.clean_nodes()
 			end
 
 		end

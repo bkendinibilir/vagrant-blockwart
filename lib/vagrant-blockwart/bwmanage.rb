@@ -29,24 +29,6 @@ module VagrantPlugins
 				return nodes.split("\n")
 			end
 
-			def update_nodes(nodes)
-				content = "nodes = {\n"
-				nodes.each do |name, uuid|
-					content += "	'#{name}': {\n"
-					content += "		'hostname': \"#{uuid}\",\n"
-					content += "	},\n"
-				end
-				content += "}\n"
-
-				File.open(@repo_path + "/nodes.py", "w+") do |f|
-					f.write(content)
-				end
-			end
-
-			def clean_nodes()
-				update_nodes({})
-			end
-
 			def apply(node)
 				node = node.gsub(/[^a-zA-Z0-9\-\_\.]/,'')
 				return bw_cli("apply #{node}", ret_stdout=false)
