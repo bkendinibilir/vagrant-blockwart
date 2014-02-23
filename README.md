@@ -4,13 +4,17 @@ This is a [Vagrant](http://www.vagrantup.com) plugin that adds an [Blockwart](ht
 
 ## Installation
 
-Just type it on your vagrant environment:
+First [install Blockwart](http://docs.blockwart.org/en/latest/installation.html):
+
+	pip install blockwart
+
+Then just type it on your vagrant environment:
 
 	vagrant plugin install vagrant-blockwart
 
 ## Usage
 
-TODO: Write usage instructions here
+https://github.com/bkendinibilir/vagrant-blockwart-example
 
 ## Contributing
 
