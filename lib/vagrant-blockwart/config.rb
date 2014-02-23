@@ -4,17 +4,21 @@ module VagrantPlugins
             attr_accessor :repo_path
     		attr_accessor :node_name
     		attr_accessor :node_host
+            attr_accessor :interactive
+
 
     		def initialize
                 @repo_path = UNSET_VALUE
     			@node_name = UNSET_VALUE
     			@node_host = UNSET_VALUE
+                @interactive = UNSET_VALUE
     		end
 
     		def finalize!
     			@repo_path = "blockwart/" if @repo_path == UNSET_VALUE
                 @node_name = nil if @node_name == UNSET_VALUE
     			@node_host = nil if @node_host == UNSET_VALUE
+                @interactive = false if @interactive == UNSET_VALUE
     		end
 
             def validate(machine)

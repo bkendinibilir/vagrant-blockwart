@@ -29,9 +29,13 @@ module VagrantPlugins
 				return nodes.split("\n")
 			end
 
-			def apply(node)
+			def apply(node, interactive=false)
 				node = node.gsub(/[^a-zA-Z0-9\-\_\.]/,'')
-				return bw_cli("apply #{node}", ret_stdout=false)
+				if interactive
+					return bw_cli("apply #{node} -i", ret_stdout=false)
+				else
+					return bw_cli("apply #{node}", ret_stdout=false)
+				end
 			end
 
 		end
