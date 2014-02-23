@@ -25,7 +25,7 @@ module VagrantPlugins
 			end
 
 			def node_hosts()
-				nodes = bw_cli("nodes --hostname")
+				nodes = bw_cli("nodes --hostnames")
 				return nodes.split("\n")
 			end
 
