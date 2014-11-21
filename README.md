@@ -1,6 +1,6 @@
 # Vagrant Blockwart Provisioner
 
-This is a [Vagrant](http://www.vagrantup.com) plugin that adds an [Blockwart](http://blockwart.org) provisioner to Vagrant, supporting to provision your virtual machines with a local Blockwart repository.
+This is a [Vagrant](http://www.vagrantup.com) plugin that adds a [Blockwart](http://blockwart.org) provisioner to Vagrant, supporting provisioning of your virtual machines with a local Blockwart repository.
 
 ## Installation
 
