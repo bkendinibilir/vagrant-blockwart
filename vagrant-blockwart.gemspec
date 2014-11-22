@@ -12,10 +12,10 @@ Gem::Specification.new do |spec|
   spec.description   = "Enables Vagrant to provision machines with Blockwart."
   spec.homepage      = "https://github.com/bkendinibilir/vagrant-blockwart"
   spec.license       = "MIT"
-  gem.post_install_message = <<-MESSAGE
-  !    The 'vagrant-blockwart' gem has been deprecated and has been replaced by 'vagrant-bundlewrap'.
-  !    See: https://rubygems.org/gems/vagrant-bundlewrap
-  !    And: https://github.com/bkendinibilir/vagrant-bundlewrap
+  spec.post_install_message = <<-MESSAGE
+ !    The 'vagrant-blockwart' gem has been deprecated and has been replaced by 'vagrant-bundlewrap'.
+ !    See: https://rubygems.org/gems/vagrant-bundlewrap
+ !    And: https://github.com/bkendinibilir/vagrant-bundlewrap
   MESSAGE
 
   spec.files         = `git ls-files -z`.split("\x0")
